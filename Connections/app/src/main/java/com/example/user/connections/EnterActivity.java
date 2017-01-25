@@ -1,5 +1,6 @@
 package com.example.user.connections;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,19 @@ public class EnterActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(EnterActivity.this, SignUpActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(EnterActivity.this, SignUpActivity.class);
+                startActivity(intent);
 
             }
         });
