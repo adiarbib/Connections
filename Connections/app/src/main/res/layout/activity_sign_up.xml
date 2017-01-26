@@ -25,7 +25,8 @@
         android:hint="Please enter your e-mail here"
         android:id="@+id/mail"
         android:layout_above="@+id/signup_username_input"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -41,7 +42,8 @@
         android:hint="Please enter your password here"
         android:id="@+id/signup_password_input"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:inputType="textPassword"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -80,7 +82,12 @@
         android:layout_marginTop="64dp"
         android:id="@+id/country" />
 
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/country_textView" />
 
 
 
