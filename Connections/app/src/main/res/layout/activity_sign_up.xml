@@ -48,21 +48,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Birthdate"
+        android:text="Birthday"
         android:id="@+id/birthdate_textView"
-        android:layout_above="@+id/birthdate"
-        android:layout_alignEnd="@+id/birthdate"
+        android:textSize="20dp"
         android:layout_alignTop="@+id/country_textView"
-        android:layout_alignParentStart="true"
-        android:textSize="20dp"/>
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Current Date"
-        android:layout_alignTop="@+id/country"
-        android:layout_alignParentStart="true"
-        android:id="@+id/birthdate" />
+        android:id="@+id/birthdate"
+        android:layout_marginTop="44dp"
+        android:layout_below="@+id/signup_password_input"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,24 +69,25 @@
         android:text="Country"
         android:id="@+id/country_textView"
         android:textSize="20dp"
-        android:layout_above="@+id/birthdate"
-        android:layout_alignParentEnd="true" />
+        android:layout_above="@+id/countries_spinner"
+        android:layout_toEndOf="@+id/img" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Country"
-        android:layout_below="@+id/signup_password_input"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="64dp"
-        android:id="@+id/country" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Done"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/country_textView" />
+        android:layout_alignParentEnd="true"
+        android:id="@+id/done_butt"/>
+
+    <Spinner
+        android:id="@+id/countries_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/birthdate"
+        android:layout_alignStart="@+id/country_textView"
+        android:layout_alignBottom="@+id/birthdate" />
 
 
 

@@ -1,39 +1,51 @@
 package com.example.user.connections;
 
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-public class SignUpActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
+public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    Calendar cal;
+    Button doneButt;
     ImageButton profilePic;
     EditText mailEditText;
     EditText usernameEditText;
     EditText passwordEditText;
     Button birthdateButt;
-    Button countryButt;
+
+    Calendar cal;
     String formattedDate;
     SimpleDateFormat df;
     Date pickedDate;
+    String country;
+    String usernametxt;
+    String passwordtxt;
+    String mailtxt;
+
+    public static final String DATE_KEY = "date";
+    public static final String COUNTRY_KEY = "country";
 
 
     @Override
@@ -41,41 +53,68 @@ public class SignUpActivity extends FragmentActivity implements DatePickerDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        profilePic = (ImageButton) findViewById(R.id.img);
-        mailEditText = (EditText) findViewById(R.id.mail);
-        usernameEditText = (EditText) findViewById(R.id.signup_username_input);
-        passwordEditText = (EditText) findViewById(R.id.signup_password_input);
-        birthdateButt = (Button) findViewById(R.id.birthdate);
-        countryButt = (Button) findViewById(R.id.country);
+        initLayoutAndOtherStuff();
+        birthdayButtonClick();
+        profilePictureClick();
+        initSpinner();
 
-        cal = Calendar.getInstance();
-        df = new SimpleDateFormat("dd - MMM - yyyy");
-        formattedDate = df.format(cal.getTime());
-        pickedDate = cal.getTime();
-        birthdateButt.setText(formattedDate);
-
-        birthdateButt.setOnClickListener(new View.OnClickListener() {
+        doneButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                /*DatePickerDialog mDatePicker;
-                mDatePicker = new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int selectedyear, int selectedmonth, int selectedday) {
-                        birthdateButt.setText(selectedday + " / " + selectedmonth + " / " + selectedyear);
-                        selectedmonth += 1;
-                        pickedDate = new Date(selectedyear, selectedmonth, selectedday);
-                    }
-                }, cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH));
+                // Retrieve the text entered from the EditText
+                usernametxt = usernameEditText.getText().toString();
+                passwordtxt = passwordEditText.getText().toString();
+                mailtxt = mailEditText.getText().toString();
 
-                mDatePicker.setTitle("Select Date");
-                mDatePicker.show();*/
-                DialogFragment newFragment = new DatePickerFragment();
-                //newFragment.show(getSupportFragmentManager(), "datePicker");
-                newFragment.show(getFragmentManager(),"datePicker");
+                // Force user to fill up the form
+                if (usernametxt.equals("") || passwordtxt.equals("") || mailtxt.equals("") ) {
+                    Toast.makeText(getApplicationContext(),
+                            "Please complete the sign up form",
+                            Toast.LENGTH_LONG).show();
+
+                } else {
+                    // Save new user data into Parse.com Data Storage
+                    ParseUser user = new ParseUser();
+                    user.setUsername(usernametxt);
+                    user.setPassword(passwordtxt);
+                    user.setEmail(mailtxt);
+                    user.put(DATE_KEY,pickedDate);
+                    user.put(COUNTRY_KEY,country);
+                    user.signUpInBackground(new SignUpCallback() {
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                // Show a simple Toast message upon successful registration
+                                Toast.makeText(getApplicationContext(),
+                                        "Successfully Signed up, please log in.",
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        "Sign up Error", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        }
+                    });
+                }
+
             }
         });
 
+    }
+
+    private void initSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.countries_spinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.countries_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    private void profilePictureClick() {
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +123,43 @@ public class SignUpActivity extends FragmentActivity implements DatePickerDialog
                 startActivityForResult(intent, 0);
             }
         });
+    }
 
+    private void birthdayButtonClick() {
+        birthdateButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerDialog mDatePicker;
+                mDatePicker = new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int selectedyear, int selectedmonth, int selectedday) {
+                        selectedmonth += 1;
+                        birthdateButt.setText(selectedday + " / " + selectedmonth + " / " + selectedyear);
+                        pickedDate = new Date(selectedyear, selectedmonth, selectedday);
+                    }
+                }, cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+                mDatePicker.setTitle("Select your birthday");
+                mDatePicker.show();
+
+            }
+        });
+    }
+
+    private void initLayoutAndOtherStuff() {
+        profilePic = (ImageButton) findViewById(R.id.img);
+        mailEditText = (EditText) findViewById(R.id.mail);
+        usernameEditText = (EditText) findViewById(R.id.signup_username_input);
+        passwordEditText = (EditText) findViewById(R.id.signup_password_input);
+        birthdateButt = (Button) findViewById(R.id.birthdate);
+        doneButt = (Button) findViewById(R.id.done_butt);
+
+        cal = Calendar.getInstance();
+        df = new SimpleDateFormat("dd - MMM - yyyy");
+        formattedDate = df.format(cal.getTime());
+        pickedDate = cal.getTime();
+        birthdateButt.setText(formattedDate);
     }
 
     @Override
@@ -105,11 +180,14 @@ public class SignUpActivity extends FragmentActivity implements DatePickerDialog
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //do some stuff for example write on log and update TextField on activity
-        pickedDate=new Date(year,month+1,day);
-        Toast.makeText(SignUpActivity.this, "This is my Toast message!",
-                Toast.LENGTH_LONG).show();
-        birthdateButt.setText(day+" - "+month+1+" - "+year);
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+        country = (String) parent.getItemAtPosition(pos);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

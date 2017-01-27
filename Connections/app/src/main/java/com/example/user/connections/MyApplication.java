@@ -24,7 +24,7 @@ public class MyApplication extends Application
 
     public void initParse() {
         //ParseObject.registerSubclass(MyEvent.class);
-        ParseUser.registerSubclass(MyUser.class);
+        //ParseUser.registerSubclass(MyUser.class);
         Parse.enableLocalDatastore(this);
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(APPLICATION_ID)
