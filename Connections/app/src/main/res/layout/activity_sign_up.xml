@@ -62,7 +62,7 @@
         android:text="Current Date"
         android:layout_alignTop="@+id/country"
         android:layout_alignParentStart="true"
-        android:id="@+id/birthdate"/>
+        android:id="@+id/birthdate" />
 
     <TextView
         android:layout_width="wrap_content"

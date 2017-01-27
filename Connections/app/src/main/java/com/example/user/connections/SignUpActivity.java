@@ -1,24 +1,28 @@
 package com.example.user.connections;
 
 import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
 
     Calendar cal;
     ImageButton profilePic;
@@ -54,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                DatePickerDialog mDatePicker;
+                /*DatePickerDialog mDatePicker;
                 mDatePicker = new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int selectedyear, int selectedmonth, int selectedday) {
@@ -65,8 +69,10 @@ public class SignUpActivity extends AppCompatActivity {
                 }, cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH));
 
                 mDatePicker.setTitle("Select Date");
-                mDatePicker.show();
-
+                mDatePicker.show();*/
+                DialogFragment newFragment = new DatePickerFragment();
+                //newFragment.show(getSupportFragmentManager(), "datePicker");
+                newFragment.show(getFragmentManager(),"datePicker");
             }
         });
 
@@ -96,5 +102,14 @@ public class SignUpActivity extends AppCompatActivity {
                 throw new RuntimeException();
             }
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        //do some stuff for example write on log and update TextField on activity
+        pickedDate=new Date(year,month+1,day);
+        Toast.makeText(SignUpActivity.this, "This is my Toast message!",
+                Toast.LENGTH_LONG).show();
+        birthdateButt.setText(day+" - "+month+1+" - "+year);
     }
 }
